@@ -364,6 +364,7 @@ int start_dressup(Menu *menu, Resources *resources, GameState *game_state,
 	dressup->currently_grabbed = NULL;
 
 	lain_set_outfit(resources, game_state->lain.outfit, &game_state->lain);
+	write_save_file(game_state);
 
 	init_dressup_scene(resources, game_state, &dressup->scene, dressup);
 
@@ -404,6 +405,8 @@ static void reset_tools(GameState *game_state, DressUp *dressup)
 
 		game_state->lain.tool_state = NO_TOOLS;
 	}
+
+	write_save_file(game_state);
 }
 
 static void wear_item(Resources *resources, GameState *game_state,
@@ -453,6 +456,7 @@ static void wear_item(Resources *resources, GameState *game_state,
 
 		break;
 	}
+	write_save_file(game_state);
 }
 
 void handle_dressup_event(DressUpEvent event, void *object, Engine *engine)
@@ -542,4 +546,6 @@ void handle_dressup_event(DressUpEvent event, void *object, Engine *engine)
 		screwdriver_icon->texture =
 		    texture_get(&resources->minigame, SCREWDRIVER_ICON);
 	}
+
+	write_save_file(game_state);
 }

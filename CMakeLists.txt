@@ -34,7 +34,7 @@ set(SOURCES
 
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
-set(USE_FLAGS "--use-preload-plugins --preload-file=../res/sprites/@/res/sprites/ --embed-file=../res/animations.json@/res/animations.json --use-port=contrib.glfw3 -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -O2 -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=1 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY=1")
+set(USE_FLAGS "--use-preload-plugins --preload-file=../res/sprites/@/res/sprites/ --embed-file=../res/animations.json@/res/animations.json --use-port=contrib.glfw3 -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -O2 -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=1 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY=1 -s EXPORTED_FUNCTIONS=setValue,_main")
 
 if(DEBUG)
     set(CMAKE_C_FLAGS "-g")

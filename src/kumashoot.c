@@ -307,6 +307,8 @@ static void update_progress(Resources *resources, GameState *game_state, int by)
 	if (new_item_unlocked) {
 		play_sound(SND_120);
 	}
+
+	write_save_file(game_state);
 }
 
 static void update_character(Scene *scene, GameState *game_state,

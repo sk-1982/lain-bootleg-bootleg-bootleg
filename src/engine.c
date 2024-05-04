@@ -145,4 +145,8 @@ void engine_stop(Engine *engine)
 void engine_run(Engine *engine)
 {
 	engine_renderloop(engine);
+
+	if (!write_save_file(&engine->game_state)) {
+		printf("Failed to write save file.\n");
+	};
 }

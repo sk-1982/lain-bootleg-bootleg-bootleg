@@ -37,8 +37,7 @@ typedef struct {
 	_Bool navi_unlocked;
 } GameState;
 
-struct engine;
 void reset_game_state(Resources *resources, GameState *game_state);
 int init_game_state(Resources *resources, GameState *game_state);
-int write_save_file(struct engine *engine);
+int write_save_file(GameState *s);
 int load_save_file(Resources *resources, GameState *game_state);
