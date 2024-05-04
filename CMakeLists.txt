@@ -34,10 +34,11 @@ set(SOURCES
 
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
-set(USE_FLAGS "--use-preload-plugins --preload-file=../res/sprites/@/res/sprites/ --embed-file=../res/animations.json@/res/animations.json --use-port=contrib.glfw3 -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -O2 -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=1 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY=1 -s EXPORTED_FUNCTIONS=setValue,_main")
+set(USE_FLAGS "--use-preload-plugins --preload-file=../res/sprites/@/res/sprites/ --preload-file=../res/sounds/@/res/sounds/  --embed-file=../res/animations.json@/res/animations.json --use-port=contrib.glfw3 -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -O2 -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=1 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY=1 -s EXPORTED_FUNCTIONS=setValue,_main -s USE_SDL")
+set(CMAKE_C_FLAGS "-s USE_SDL")
 
 if(DEBUG)
-    set(CMAKE_C_FLAGS "-g")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
     set(USE_FLAGS "-g3 -gsource-map -gseparate-dwarf ${USE_FLAGS}")
 endif()
 
