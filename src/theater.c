@@ -47,7 +47,7 @@ static void load_theater_animation(GameState *game_state, Resources *resources,
 						     .z_index = i,
 						 });
 
-		sprite_set_animation_direct(resources, game_state->time, layer,
+		sprite_set_animation_direct(&resources->minigame, game_state->time, layer,
 					    layer_animation);
 	}
 
@@ -77,19 +77,19 @@ static void init_theater(Resources *resources, GameState *game_state,
 					     .pos = {0.0f, 0.0f},
 					     .z_index = 0,
 					     .texture = texture_get(
-						 resources, CLASSROOM_BG)});
+						 &resources->minigame, CLASSROOM_BG)});
 
 			make_sprite(&theater->layers[1],
 				    (Sprite){.visible = true,
 					     .pos = {0.0f, 0.0f},
 					     .z_index = 2,
 					     .texture = texture_get(
-						 resources, CLASSROOM_TABLES)});
+						 &resources->minigame, CLASSROOM_TABLES)});
 
 			make_sprite(&theater->layers[2],
 				    (Sprite){.visible = true, .z_index = 1});
 			sprite_set_animation(
-			    resources, game_state->time, &theater->layers[2],
+			    &resources->minigame, game_state->time, &theater->layers[2],
 			    get_lain_walk_animation(lain_outfit));
 
 			theater->layer_count = 3;
@@ -109,12 +109,12 @@ static void init_theater(Resources *resources, GameState *game_state,
 					     .pos = {0.0f, 0.0f},
 					     .z_index = 0,
 					     .texture = texture_get(
-						 resources, SCHOOL_BG)});
+						 &resources->minigame, SCHOOL_BG)});
 
 			make_sprite(&theater->layers[1],
 				    (Sprite){.visible = true, .z_index = 1});
 			sprite_set_animation(
-			    resources, game_state->time, &theater->layers[1],
+			    &resources->minigame, game_state->time, &theater->layers[1],
 			    get_lain_walk_animation(lain_outfit));
 
 			theater->layer_count = 2;
@@ -135,12 +135,12 @@ static void init_theater(Resources *resources, GameState *game_state,
 				     .pos = {0.0f, 0.0f},
 				     .z_index = 0,
 				     .texture = texture_get(
-					 resources, LAIN_ROOM_NIGHT_BG)});
+					 &resources->minigame, LAIN_ROOM_NIGHT_BG)});
 
 			make_sprite(&theater->layers[1],
 				    (Sprite){.visible = true, .z_index = 1});
 			sprite_set_animation(
-			    resources, game_state->time, &theater->layers[1],
+			    &resources->minigame, game_state->time, &theater->layers[1],
 			    get_lain_walk_animation(lain_outfit));
 
 			theater->layer_count = 2;
@@ -159,12 +159,12 @@ static void init_theater(Resources *resources, GameState *game_state,
 					     .pos = {0.0f, 0.0f},
 					     .z_index = 0,
 					     .texture = texture_get(
-						 resources, ARISU_ROOM_BG)});
+						 &resources->minigame, ARISU_ROOM_BG)});
 
 			make_sprite(&theater->layers[1],
 				    (Sprite){.visible = true, .z_index = 1});
 			sprite_set_animation(
-			    resources, game_state->time, &theater->layers[1],
+			    &resources->minigame, game_state->time, &theater->layers[1],
 			    get_lain_walk_animation(lain_outfit));
 
 			theater->layer_count = 2;
@@ -184,12 +184,12 @@ static void init_theater(Resources *resources, GameState *game_state,
 					     .pos = {0.0f, 0.0f},
 					     .z_index = 0,
 					     .texture = texture_get(
-						 resources, CYBERIA_BG)});
+						 &resources->minigame, CYBERIA_BG)});
 
 			make_sprite(&theater->layers[1],
 				    (Sprite){.visible = true, .z_index = 1});
 			sprite_set_animation(
-			    resources, game_state->time, &theater->layers[1],
+			    &resources->minigame, game_state->time, &theater->layers[1],
 			    get_lain_walk_animation(lain_outfit));
 
 			theater->layer_count = 2;
@@ -208,12 +208,12 @@ static void init_theater(Resources *resources, GameState *game_state,
 					     .pos = {0.0f, 0.0f},
 					     .z_index = 0,
 					     .texture = texture_get(
-						 resources, STREET_BG_1)});
+						 &resources->minigame, STREET_BG_1)});
 
 			make_sprite(&theater->layers[1],
 				    (Sprite){.visible = true, .z_index = 1});
 			sprite_set_animation(
-			    resources, game_state->time, &theater->layers[1],
+			    &resources->minigame, game_state->time, &theater->layers[1],
 			    get_lain_walk_animation(lain_outfit));
 
 			theater->layer_count = 2;
@@ -242,7 +242,7 @@ void update_theater(Resources *resources, Menu *menu, GameState *game_state,
 
 	_Bool was_animated = false;
 	if (theater->type == THEATER_MOVIE) {
-		was_animated = movie_render(resources->shaders[MOVIE_SHADER],
+		was_animated = movie_render(resources->minigame.shaders[MOVIE_SHADER],
 					    &theater->movie);
 	} else {
 		// hacky way of detecting whether or not the theater is over
@@ -251,7 +251,7 @@ void update_theater(Resources *resources, Menu *menu, GameState *game_state,
 		for (int i = 0; i < cvector_size(theater->scene.sprites); ++i) {
 			Sprite *curr = theater->scene.sprites[i];
 			if (curr->animation != NULL) {
-				sprite_try_next_frame(resources,
+				sprite_try_next_frame(&resources->main,
 						      game_state->time, curr);
 				was_animated = true;
 			}
@@ -266,14 +266,14 @@ void update_theater(Resources *resources, Menu *menu, GameState *game_state,
 
 		reset_game_state(resources, game_state);
 		menu->theater_preview.texture =
-		    texture_get(resources, game_state->current_theater_preview);
+		    texture_get(&resources->main, game_state->current_theater_preview);
 
 		was_animated = true;
 	}
 
 	if (!was_animated || glfwWindowShouldClose(window)) {
 		play_sound(SND_111);
-		destroy_minigame(resources->textures, menu, minigame, window);
+		destroy_minigame(resources->main.textures, menu, minigame, window);
 		return;
 	}
 
@@ -288,7 +288,7 @@ int start_theater(Menu *menu, Resources *resources, GameState *game_state,
 {
 
 	if (!(make_window(minigame_window, MINIGAME_WIDTH, MINIGAME_HEIGHT,
-			  "lain theatre", main_window, true))) {
+			  "lain theatre", main_window, true, NULL))) {
 		printf("Failed to create theater window.\n");
 		return 0;
 	}

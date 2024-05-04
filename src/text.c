@@ -18,7 +18,7 @@ static const uint16_t red_glyphs_order[256] = {
     ['0'] = 0, ['1'] = 1, ['2'] = 2, ['3'] = 3, ['4'] = 4, ['5'] = 5,
     ['6'] = 6, ['7'] = 7, ['8'] = 8, ['9'] = 9, ['-'] = 10};
 
-void fonts_init(Resources *resources)
+void fonts_init(GLResources *resources)
 {
 	resources->fonts[FONT_RED] =
 	    (Font){.letter_spacing = 10.0f,

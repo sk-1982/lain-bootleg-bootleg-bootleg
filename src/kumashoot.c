@@ -100,34 +100,34 @@ static void create_character(Resources *resources, GameState *game_state,
 		character->score_value = bear_type == BEAR_WHITE ? 10 : 5;
 		break;
 	case MIHO: {
-		sprite_set_animation(resources, now, sprite,
+		sprite_set_animation(&resources->minigame, now, sprite,
 				     KUMA_SHOOT_MIHO_ANIMATION);
 
 		character->score_value = -5;
 		break;
 	}
 	case YASUO: {
-		sprite_set_animation(resources, now, sprite,
+		sprite_set_animation(&resources->minigame, now, sprite,
 				     KUMA_SHOOT_YASUO_ANIMATION);
 
 		character->score_value = -1;
 		break;
 	}
 	case MIKA: {
-		sprite_set_animation(resources, now, sprite,
+		sprite_set_animation(&resources->minigame, now, sprite,
 				     KUMA_SHOOT_MIKA_ANIMATION);
 
 		character->score_value = -10;
 		break;
 	}
 	case SCHOOL_LAIN_STANDING:
-		sprite_set_animation(resources, now, sprite,
+		sprite_set_animation(&resources->minigame, now, sprite,
 				     KUMA_SHOOT_SCHOOL_LAIN_1_ANIMATION);
 
 		character->score_value = 0;
 		break;
 	case DEFAULT_LAIN: {
-		sprite_set_animation(resources, now, sprite,
+		sprite_set_animation(&resources->minigame, now, sprite,
 				     KUMA_SHOOT_DEFAULT_LAIN_ANIMATION);
 
 		character->score_value = 0;
@@ -172,7 +172,7 @@ static void set_sprite_to_smoke(Resources *resources, double now,
 {
 	sprite->z_index = 3;
 
-	sprite_set_animation(resources, now, sprite,
+	sprite_set_animation(&resources->minigame, now, sprite,
 			     KUMA_SHOOT_SMOKE_ANIMATION);
 }
 
@@ -187,7 +187,7 @@ static void spawn_bear(Resources *resources, GameState *game_state, Bear *bear)
 					    .pivot_centered = true,
 					    .z_index = 1});
 
-	sprite_set_animation(resources, game_state->time, &bear->sprite,
+	sprite_set_animation(&resources->minigame, game_state->time, &bear->sprite,
 			     bear->type == BEAR_BROWN
 				 ? KUMA_SHOOT_BROWN_BEAR_WALK_ANIMATION
 				 : KUMA_SHOOT_WHITE_BEAR_WALK_ANIMATION);
@@ -333,7 +333,7 @@ static void update_character(Scene *scene, GameState *game_state,
 			update_progress(resources, game_state,
 					character->score_value);
 		} else {
-			sprite_try_next_frame(resources, now, sprite);
+			sprite_try_next_frame(&resources->minigame, now, sprite);
 		}
 
 		return;
@@ -354,7 +354,7 @@ static void update_character(Scene *scene, GameState *game_state,
 						      .pivot_centered = true,
 						      .z_index = 3,
 						      .pos = sprite->pos});
-			sprite_set_animation(resources, now, &screws,
+			sprite_set_animation(&resources->minigame, now, &screws,
 					     KUMA_SHOOT_SCREW_ANIMATION);
 
 			character->additional_sprite = screws;
@@ -371,10 +371,10 @@ static void update_character(Scene *scene, GameState *game_state,
 		} else {
 			if (character->additional_sprite.animation != NULL) {
 				sprite_try_next_frame(
-				    resources, now,
+				    &resources->minigame, now,
 				    &character->additional_sprite);
 			}
-			sprite_try_next_frame(resources, now, sprite);
+			sprite_try_next_frame(&resources->minigame, now, sprite);
 		}
 		break;
 	}
@@ -384,7 +384,7 @@ static void update_character(Scene *scene, GameState *game_state,
 			sprite->mirrored = false;
 
 			sprite_set_animation(
-			    resources, now, sprite,
+			    &resources->minigame, now, sprite,
 			    KUMA_SHOOT_SCREWDRIVER_LAIN_ANIMATION);
 
 			character->type = SCREWDRIVER_LAIN;
@@ -399,7 +399,7 @@ static void update_character(Scene *scene, GameState *game_state,
 			set_random_velocity(bear);
 		}
 
-		sprite_try_next_frame(resources, now, sprite);
+		sprite_try_next_frame(&resources->minigame, now, sprite);
 
 		break;
 	}
@@ -407,12 +407,12 @@ static void update_character(Scene *scene, GameState *game_state,
 		if (sprite_animation_is_last_frame(sprite)) {
 			character->type = SCHOOL_LAIN;
 			sprite_set_animation(
-			    resources, now, sprite,
+			    &resources->minigame, now, sprite,
 			    KUMA_SHOOT_SCHOOL_LAIN_2_ANIMATION);
 			sprite->animation->looped = true;
 			sprite->mirrored = bear->vel_x < 0;
 		} else {
-			sprite_try_next_frame(resources, now, sprite);
+			sprite_try_next_frame(&resources->minigame, now, sprite);
 		}
 		break;
 	case SCHOOL_LAIN:
@@ -423,7 +423,7 @@ static void update_character(Scene *scene, GameState *game_state,
 			return;
 		}
 
-		sprite_try_next_frame(resources, now, sprite);
+		sprite_try_next_frame(&resources->minigame, now, sprite);
 
 		sprite->pos.x += bear->vel_x;
 
@@ -434,7 +434,7 @@ static void update_character(Scene *scene, GameState *game_state,
 			set_sprite_to_smoke(resources, now, sprite);
 			character->is_smoke = true;
 		} else {
-			sprite_try_next_frame(resources, now, sprite);
+			sprite_try_next_frame(&resources->minigame, now, sprite);
 		}
 	}
 	}
@@ -489,7 +489,7 @@ static void update_bear(Resources *resources, GameState *game_state,
 			depth_sort(scene->sprites,
 				   cvector_size(scene->sprites));
 		} else {
-			sprite_try_next_frame(resources, game_state->time,
+			sprite_try_next_frame(&resources->minigame, game_state->time,
 					      &bear->sprite);
 		}
 	} else {
@@ -497,7 +497,7 @@ static void update_bear(Resources *resources, GameState *game_state,
 
 		bear->sprite.mirrored = bear->vel_x < 0;
 
-		sprite_try_next_frame(resources, game_state->time,
+		sprite_try_next_frame(&resources->minigame, game_state->time,
 				      &bear->sprite);
 
 		if ((random_int() & 0x3f) == 0) {
@@ -513,7 +513,7 @@ void update_kumashoot(Resources *resources, Menu *menu, GameState *game_state,
 	Scene *scene = &kumashoot->scene;
 
 	if (glfwWindowShouldClose(window)) {
-		destroy_minigame(resources->textures, menu, minigame, window);
+		destroy_minigame(resources->main.textures, menu, minigame, window);
 		return;
 	}
 
@@ -554,7 +554,7 @@ static void init_kumashoot_sprites(Resources *resources, GameState *game_state,
 {
 	make_sprite(&kumashoot->background,
 		    (Sprite){.pos = {0.0f, 0.0f},
-			     .texture = texture_get(resources, KUMA_SHOOT_BG),
+			     .texture = texture_get(&resources->minigame, KUMA_SHOOT_BG),
 			     .visible = true,
 			     .z_index = 0});
 
@@ -562,7 +562,7 @@ static void init_kumashoot_sprites(Resources *resources, GameState *game_state,
 	    &kumashoot->bush_overlay,
 	    (Sprite){
 		.pos = {0.0f, 0.0f},
-		.texture = texture_get(resources, KUMA_SHOOT_BUSH_OVERLAY),
+		.texture = texture_get(&resources->minigame, KUMA_SHOOT_BUSH_OVERLAY),
 		.visible = true,
 		.z_index = 2,
 	    });
@@ -624,7 +624,7 @@ static void init_kumashoot_scene(Resources *resources, GameState *game_state,
 		    (Text){.glyph_size = {10.0f, 16.0f},
 			   .visible = false,
 			   .left_aligned = true,
-			   .font = &resources->fonts[FONT_RED]};
+			   .font = &resources->minigame.fonts[FONT_RED]};
 	}
 
 	Text *score_displays[] = {
@@ -646,7 +646,7 @@ int start_kumashoot(Menu *menu, Resources *resources, GameState *game_state,
 		    GLFWwindow *main_window)
 {
 	if (!(make_window(minigame_window, MINIGAME_WIDTH, MINIGAME_HEIGHT,
-			  "lain kuma shoot", main_window, true))) {
+			  "lain kuma shoot", main_window, true, NULL))) {
 		printf("Failed to create kuma shoot window.\n");
 		return 0;
 	}
@@ -658,7 +658,7 @@ int start_kumashoot(Menu *menu, Resources *resources, GameState *game_state,
 	minigame->type = KUMASHOOT;
 	minigame->last_updated = game_state->time;
 
-	menu->bear_icon.texture = texture_get(resources, BEAR_ICON_ACTIVE);
+	menu->bear_icon.texture = texture_get(&resources->main, BEAR_ICON_ACTIVE);
 
 	return 1;
 }

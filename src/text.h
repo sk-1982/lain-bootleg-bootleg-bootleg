@@ -29,9 +29,9 @@ typedef struct {
 	char current_text[MAX_TEXT_LENGTH];
 } Text;
 
-struct resources;
+struct glresources;
 
-void fonts_init(struct resources *resources);
+void fonts_init(struct glresources *resources);
 void update_text(Text *text_obj, char *new_text);
 GLfloat *get_glyph_vertices(GLfloat *buffer, Text *text_obj, char letter,
 			    uint8_t nth);

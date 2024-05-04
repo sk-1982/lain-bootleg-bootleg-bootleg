@@ -143,7 +143,7 @@ _Bool sprite_animation_is_last_frame(Sprite *sprite)
 	return sprite->animation->last == sprite->animation_frame;
 }
 
-static void sprite_set_frame(Resources *resources, AnimationFrame *frame,
+static void sprite_set_frame(GLResources *resources, AnimationFrame *frame,
 			     Sprite *sprite)
 {
 	sprite->animation_frame = frame;
@@ -166,7 +166,7 @@ static void sprite_set_frame(Resources *resources, AnimationFrame *frame,
 	}
 }
 
-void sprite_try_next_frame(Resources *resources, double now, Sprite *sprite)
+void sprite_try_next_frame(GLResources *resources, double now, Sprite *sprite)
 {
 	if (sprite->animation_frame->next == NULL) {
 		if (sprite->animation->looped) {
@@ -186,7 +186,7 @@ void sprite_try_next_frame(Resources *resources, double now, Sprite *sprite)
 	}
 }
 
-void sprite_set_animation_direct(Resources *resources, double now,
+void sprite_set_animation_direct(GLResources *resources, double now,
 				 Sprite *sprite, Animation *animation)
 {
 	sprite->animation = animation;
@@ -194,10 +194,10 @@ void sprite_set_animation_direct(Resources *resources, double now,
 	sprite_set_frame(resources, animation->first, sprite);
 }
 
-void sprite_set_animation(Resources *resources, double now, Sprite *sprite,
+void sprite_set_animation(GLResources *resources, double now, Sprite *sprite,
 			  AnimationID animation_id)
 {
-	Animation *animation = animation_get(resources, animation_id);
+	Animation *animation = animation_get(resources->resources, animation_id);
 	sprite_set_animation_direct(resources, now, sprite, animation);
 }
 

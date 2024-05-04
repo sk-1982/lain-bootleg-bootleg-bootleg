@@ -12,4 +12,4 @@
 #define MINIGAME_HEIGHT 400
 
 int make_window(GLFWwindow **window, int width, int height, char *name,
-		GLFWwindow *shared_ctx, _Bool centered);
+		GLFWwindow *shared_ctx, _Bool centered, Engine* engine);

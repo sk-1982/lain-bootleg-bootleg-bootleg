@@ -607,8 +607,8 @@ typedef struct {
 	Vector2D size;
 } Texture;
 
-struct resources;
+struct glresources;
 
 Texture make_texture(char *image_path, char *name);
-Texture *texture_get(struct resources *resources, int texture_id);
-void textures_init(struct resources *buffer);
+Texture *texture_get(struct glresources *resources, int texture_id);
+void textures_init(struct glresources *buffer);

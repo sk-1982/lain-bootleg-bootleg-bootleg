@@ -4,6 +4,9 @@
 #include "minigame.h"
 #include "scene.h"
 #include "state.h"
+#include <GLFW/glfw3.h>
+
+typedef struct engine Engine;
 
 typedef struct engine {
 	Resources resources;
@@ -16,6 +19,7 @@ typedef struct engine {
 
 	GameState game_state;
 } Engine;
+
 
 int engine_init(Engine *engine);
 void engine_stop(Engine *engine);

@@ -8,8 +8,13 @@
 #include "window.h"
 
 int make_window(GLFWwindow **window, int width, int height, char *name,
-		GLFWwindow *shared_ctx, _Bool centered)
+		GLFWwindow *shared_ctx, _Bool centered, Engine* engine)
 {
+	int res;
+
+	if (!engine)
+		engine = glfwGetWindowUserPointer(shared_ctx);
+
 	if (shared_ctx)
 		emscripten_glfw_set_next_window_canvas_selector("#canvas2");
 
@@ -23,10 +28,19 @@ int make_window(GLFWwindow **window, int width, int height, char *name,
 		return 0;
 	}
 
+	GLResources* resources = shared_ctx ? &engine->resources.minigame : &engine->resources.main;
+	resources->context = *window;
+
 	glfwShowWindow(*window);
 
 	glfwMakeContextCurrent(*window);
 	EM_ASM(GL.currentContext.version = 2);
+
+	res = init_glresources(resources);
+	if (!res) {
+		printf("Failed to initialize gl resources.\n");
+		return 0;
+	}
 
 	// enable alpha support
 	glEnable(GL_BLEND);
@@ -41,7 +55,6 @@ int make_window(GLFWwindow **window, int width, int height, char *name,
 	glEnable(GL_DEBUG_OUTPUT);
 
 	if (shared_ctx != NULL) {
-		Engine *engine = (Engine *)glfwGetWindowUserPointer(shared_ctx);
 		glfwSetWindowUserPointer(*window, engine);
 		glfwSetMouseButtonCallback(*window, handle_minigame_event);
 	}

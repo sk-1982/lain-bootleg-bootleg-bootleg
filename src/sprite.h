@@ -30,17 +30,17 @@ typedef struct {
 	double animation_start_time;
 } Sprite;
 
-struct resources;
+struct glresources;
 
 void depth_sort(Sprite **sprites, unsigned int sprite_count);
 _Bool is_sprite_within_bounds(const Sprite *sprite, const Vector2D point);
 Vector2D get_sprite_center_coords(const Sprite *sprite);
 GLfloat *get_sprite_vertices(GLfloat *buffer, Sprite *sprite);
 GLfloat *get_pivot_centered_sprite_vertices(GLfloat *buffer, Sprite *sprite);
-void sprite_try_next_frame(struct resources *resources, double now, Sprite *sprite);
-void sprite_set_animation(struct resources *resources, double now,
+void sprite_try_next_frame(struct glresources *resources, double now, Sprite *sprite);
+void sprite_set_animation(struct glresources *resources, double now,
 			  Sprite *sprite, AnimationID animation_id);
-void sprite_set_animation_direct(struct resources *resources, double now,
+void sprite_set_animation_direct(struct glresources *resources, double now,
 				 Sprite *sprite, Animation *animation);
 void get_hitbox_range(Vector2D pos, Vector2D hitbox_size, float *top,
 		      float *left, float *right, float *bottom);

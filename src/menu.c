@@ -51,14 +51,14 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 	    (Sprite){.pos = {6.0f, 6.0f},
 		     .hitbox_size = {32.0f, 32.0f},
 		     .texture = is_bear(current_time)
-				    ? texture_get(resources, UI_BEAR_LAIN_1)
-				    : texture_get(resources, UI_DEFAULT_LAIN_1),
+				    ? texture_get(&resources->main, UI_BEAR_LAIN_1)
+				    : texture_get(&resources->main, UI_DEFAULT_LAIN_1),
 		     .z_index = 4,
 		     .visible = true});
 
 	make_sprite(&menu->main_ui,
 		    (Sprite){.pos = {-34.0f, -34.0f},
-			     .texture = texture_get(resources, MAIN_UI_1),
+			     .texture = texture_get(&resources->main, MAIN_UI_1),
 			     .z_index = 3,
 			     .visible = true});
 
@@ -66,7 +66,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 		    (Sprite){
 			.pos = {102.0f, 38.0f},
 			.hitbox_size = {64.0f, 8.0f},
-			.texture = texture_get(resources, MAIN_UI_BAR),
+			.texture = texture_get(&resources->main, MAIN_UI_BAR),
 			.z_index = 4,
 			.visible = true,
 		    });
@@ -75,7 +75,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 		    (Sprite){
 			.pos = {112.0f, 96.0f},
 			.hitbox_size = {36.0f, 36.0f},
-			.texture = texture_get(resources, DRESSUP_BUTTON),
+			.texture = texture_get(&resources->main, DRESSUP_BUTTON),
 			.z_index = 4,
 			.visible = false,
 		    });
@@ -85,7 +85,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 			.pos = {104.0f, 80.0f},
 			.hitbox_size = {96.0f, 64.0f},
 			.texture = texture_get(
-			    resources, game_state->current_theater_preview),
+			    &resources->main, game_state->current_theater_preview),
 			.z_index = 7,
 			.visible = false,
 		    });
@@ -94,7 +94,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 		    (Sprite){
 			.pos = {0.0f, 128.0f},
 			.hitbox_size = {64.0f, 32.0f},
-			.texture = texture_get(resources, THEATER_BUTTON),
+			.texture = texture_get(&resources->main, THEATER_BUTTON),
 			.z_index = 4,
 			.visible = false,
 		    });
@@ -103,7 +103,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 		    (Sprite){
 			.pos = {56.0f, 56.0f},
 			.hitbox_size = {32.0f, 32.0f},
-			.texture = texture_get(resources, BEAR_ICON),
+			.texture = texture_get(&resources->main, BEAR_ICON),
 			.z_index = 1,
 			.visible = false,
 		    });
@@ -111,7 +111,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 	make_sprite(&menu->screwdriver_icon,
 		    (Sprite){
 			.pos = {56.0f, 56.0f},
-			.texture = texture_get(resources, SCREWDRIVER_ICON),
+			.texture = texture_get(&resources->main, SCREWDRIVER_ICON),
 			.z_index = 2,
 			.visible = false,
 		    });
@@ -119,7 +119,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 	make_sprite(&menu->paw_icon,
 		    (Sprite){
 			.pos = {56.0f, 56.0f},
-			.texture = texture_get(resources, PAW_ICON),
+			.texture = texture_get(&resources->main, PAW_ICON),
 			.z_index = 1,
 			.visible = false,
 		    });
@@ -127,7 +127,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 	make_sprite(&menu->score_preview,
 		    (Sprite){
 			.pos = {0.0f, 0.0f},
-			.texture = texture_get(resources, SCORE_DISPLAY),
+			.texture = texture_get(&resources->main, SCORE_DISPLAY),
 			.z_index = 7,
 			.visible = false,
 		    });
@@ -135,7 +135,7 @@ static void init_menu_sprites(struct tm *current_time, GameState *game_state,
 	make_sprite(&menu->background,
 		    (Sprite){
 			.pos = {0.0f, 0.0f},
-			.texture = texture_get(resources, MENU_BG),
+			.texture = texture_get(&resources->main, MENU_BG),
 			.z_index = 0,
 			.visible = true,
 		    });
@@ -205,16 +205,16 @@ static void animate_menu(GameState *game_state, Resources *resources,
 		menu->collapsed = !menu->collapsed;
 		if (menu->collapsed) {
 			menu->main_ui_bar.texture =
-			    texture_get(resources, MAIN_UI_BAR);
+			    texture_get(&resources->main, MAIN_UI_BAR);
 		} else {
 			menu->main_ui_bar.texture =
-			    texture_get(resources, MAIN_UI_BAR_ACTIVE);
+			    texture_get(&resources->main, MAIN_UI_BAR_ACTIVE);
 			menu->dressup_button.visible = true;
 			menu->theater_button.visible = true;
 		}
 	}
 
-	sprite_try_next_frame(resources, game_state->time, &menu->main_ui);
+	sprite_try_next_frame(&resources->main, game_state->time, &menu->main_ui);
 }
 
 static void update_menu_icons(Menu *menu)
@@ -290,7 +290,7 @@ void update_menu_lain(Resources *resources, GameState *game_state,
 			if (quarter == lain->laugh_quarter) {
 				if (!lain->laughing) {
 					sprite_set_animation(
-					    resources, game_state->time,
+					    &resources->main, game_state->time,
 					    &lain->sprite,
 					    get_menu_lain_animation(
 						current_time, LAUGH));
@@ -302,7 +302,7 @@ void update_menu_lain(Resources *resources, GameState *game_state,
 					lain->recently_changed_laugh = true;
 
 					sprite_set_animation(
-					    resources, game_state->time,
+					    &resources->main, game_state->time,
 					    &lain->sprite,
 					    get_menu_lain_animation(
 						current_time, BLINK));
@@ -310,13 +310,13 @@ void update_menu_lain(Resources *resources, GameState *game_state,
 			} else if (!lain->blinking) {
 				if (!lain->laughing) {
 					sprite_set_animation(
-					    resources, game_state->time,
+					    &resources->main, game_state->time,
 					    &lain->sprite,
 					    get_menu_lain_animation(
 						current_time, BLINK));
 				} else {
 					sprite_set_animation(
-					    resources, game_state->time,
+					    &resources->main, game_state->time,
 					    &lain->sprite,
 					    get_menu_lain_animation(
 						current_time, LAUGH_BLINK));
@@ -330,7 +330,7 @@ void update_menu_lain(Resources *resources, GameState *game_state,
 	}
 
 	if (lain->sprite.animation != NULL) {
-		sprite_try_next_frame(resources, game_state->time,
+		sprite_try_next_frame(&resources->main, game_state->time,
 				      &lain->sprite);
 	}
 }
@@ -373,7 +373,7 @@ void init_menu(Menu *menu, GameState *game_state, Resources *resources)
 
 	init_menu_sprites(menu->current_time, game_state, resources, menu);
 
-	init_menu_text_objects(resources->fonts, game_state, menu);
+	init_menu_text_objects(resources->main.fonts, game_state, menu);
 
 	Sprite *sprites[] = {
 	    &menu->ui_lain.sprite,   &menu->main_ui,
@@ -455,7 +455,7 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 				play_sound(SND_114);
 
 				menu->theater_preview.texture = texture_get(
-				    resources,
+				    &resources->main,
 				    get_next_theater_preview(
 					&engine->game_state,
 					menu->theater_preview.texture->id));
@@ -465,13 +465,13 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 				play_sound(SND_112);
 
 				sprite_set_animation(
-				    resources, engine->game_state.time, main_ui,
+				    &resources->main, engine->game_state.time, main_ui,
 				    MAIN_UI_EXPAND_ANIMATION);
 			} else if (engine->minigame.type != DRESSUP) {
 				play_sound(SND_113);
 
 				sprite_set_animation(
-				    resources, engine->game_state.time, main_ui,
+				    &resources->main, engine->game_state.time, main_ui,
 				    MAIN_UI_COLLAPSE_ANIMATION);
 			}
 		}
@@ -491,7 +491,7 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 			theater_preview->visible = !theater_preview->visible;
 
 			menu->theater_button.texture =
-			    texture_get(resources, theater_preview->visible
+			    texture_get(&resources->main, theater_preview->visible
 						       ? THEATER_BUTTON_ACTIVE
 						       : THEATER_BUTTON);
 		}

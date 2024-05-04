@@ -7,20 +7,27 @@
 
 int init_resources(Resources *resources)
 {
-	textures_init(resources);
-
-	if (!shaders_init(resources->shaders)) {
-		printf("Failed to initialize shaders.\n");
-		return 0;
-	};
-
-	fonts_init(resources);
+	resources->minigame.resources = resources;
+	resources->main.resources = resources;
 
 	animations_init(resources);
 
 	if (!sounds_init()) {
 		return 0;
 	};
+
+	return 1;
+}
+
+int init_glresources(GLResources* resources) {
+	textures_init(resources);
+
+	if (!shaders_init(resources->shaders)) {
+		printf("Failed to initialize shaders.\n");
+		return 0;
+	}
+
+	fonts_init(resources);
 
 	return 1;
 }

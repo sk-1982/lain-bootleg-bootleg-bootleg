@@ -49,7 +49,7 @@ void lain_set_outfit(Resources *resources, LainOutfit outfit, Lain *lain)
 	switch (outfit) {
 	case OUTFIT_DEFAULT: {
 		lain->standing_texture =
-		    texture_get(resources, LAIN_DEFAULT_STANDING);
+		    texture_get(&resources->minigame, LAIN_DEFAULT_STANDING);
 		lain->leave_animation = LAIN_DEFAULT_LEAVE_ANIMATION;
 		lain->walk_animation = LAIN_DEFAULT_WALK_LEFT_ANIMATION;
 
@@ -58,7 +58,7 @@ void lain_set_outfit(Resources *resources, LainOutfit outfit, Lain *lain)
 
 	case OUTFIT_SWEATER: {
 		lain->standing_texture =
-		    texture_get(resources, LAIN_SWEATER_STANDING);
+		    texture_get(&resources->minigame, LAIN_SWEATER_STANDING);
 		lain->leave_animation = LAIN_SWEATER_LEAVE_ANIMATION;
 		lain->walk_animation = LAIN_SWEATER_WALK_LEFT_ANIMATION;
 
@@ -67,7 +67,7 @@ void lain_set_outfit(Resources *resources, LainOutfit outfit, Lain *lain)
 
 	case OUTFIT_CYBERIA: {
 		lain->standing_texture =
-		    texture_get(resources, LAIN_CYBERIA_STANDING);
+		    texture_get(&resources->minigame, LAIN_CYBERIA_STANDING);
 		lain->leave_animation = LAIN_CYBERIA_LEAVE_ANIMATION;
 		lain->walk_animation = LAIN_CYBERIA_WALK_LEFT_ANIMATION;
 
@@ -76,7 +76,7 @@ void lain_set_outfit(Resources *resources, LainOutfit outfit, Lain *lain)
 
 	case OUTFIT_ALIEN: {
 		lain->standing_texture =
-		    texture_get(resources, LAIN_ALIEN_STANDING);
+		    texture_get(&resources->minigame, LAIN_ALIEN_STANDING);
 		lain->leave_animation = LAIN_ALIEN_LEAVE_ANIMATION;
 		lain->walk_animation = LAIN_ALIEN_WALK_LEFT_ANIMATION;
 
@@ -85,7 +85,7 @@ void lain_set_outfit(Resources *resources, LainOutfit outfit, Lain *lain)
 
 	case OUTFIT_BEAR: {
 		lain->standing_texture =
-		    texture_get(resources, LAIN_BEAR_STANDING);
+		    texture_get(&resources->minigame, LAIN_BEAR_STANDING);
 		lain->leave_animation = LAIN_BEAR_LEAVE_ANIMATION;
 		lain->walk_animation = LAIN_BEAR_WALK_LEFT_ANIMATION;
 
@@ -94,7 +94,7 @@ void lain_set_outfit(Resources *resources, LainOutfit outfit, Lain *lain)
 
 	case OUTFIT_SCHOOL: {
 		lain->standing_texture =
-		    texture_get(resources, LAIN_SCHOOL_STANDING);
+		    texture_get(&resources->minigame, LAIN_SCHOOL_STANDING);
 		lain->leave_animation = LAIN_SCHOOL_LEAVE_ANIMATION;
 		lain->walk_animation = LAIN_SCHOOL_WALK_LEFT_ANIMATION;
 
@@ -110,7 +110,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 		    (Sprite){
 			.pos = {440.0f, 64.0f},
 			.hitbox_size = {40.0f, 131.0f},
-			.texture = texture_get(resources, BEAR_OUTFIT),
+			.texture = texture_get(&resources->minigame, BEAR_OUTFIT),
 			.visible = game_state->bear_outfit_unlocked &&
 				   game_state->lain.outfit != OUTFIT_BEAR,
 			.z_index = 1,
@@ -120,7 +120,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 		    (Sprite){
 			.pos = {32.0f, 64.0f},
 			.hitbox_size = {40.0f, 131.0f},
-			.texture = texture_get(resources, SCHOOL_OUTFIT),
+			.texture = texture_get(&resources->minigame, SCHOOL_OUTFIT),
 			.visible = game_state->school_outfit_unlocked &&
 				   game_state->lain.outfit != OUTFIT_SCHOOL,
 			.z_index = 1,
@@ -130,7 +130,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 		    (Sprite){
 			.pos = {112.0f, 64.0f},
 			.hitbox_size = {40.0f, 131.0f},
-			.texture = texture_get(resources, SWEATER_OUTFIT),
+			.texture = texture_get(&resources->minigame, SWEATER_OUTFIT),
 			.visible = game_state->sweater_outfit_unlocked &&
 				   game_state->lain.outfit != OUTFIT_SWEATER,
 			.z_index = 1,
@@ -140,7 +140,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 		    (Sprite){
 			.pos = {336.0f, 64.0f},
 			.hitbox_size = {40.0f, 131.0f},
-			.texture = texture_get(resources, CYBERIA_OUTFIT),
+			.texture = texture_get(&resources->minigame, CYBERIA_OUTFIT),
 			.visible = game_state->cyberia_outfit_unlocked &&
 				   game_state->lain.outfit != OUTFIT_CYBERIA,
 			.z_index = 1,
@@ -150,7 +150,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 		    (Sprite){
 			.pos = {216.0f, 8.0f},
 			.hitbox_size = {24.0f, 20.0f},
-			.texture = texture_get(resources, DRESSUP_UFO),
+			.texture = texture_get(&resources->minigame, DRESSUP_UFO),
 			.visible = game_state->alien_outfit_unlocked &&
 				   game_state->lain.outfit != OUTFIT_ALIEN,
 			.z_index = 1,
@@ -160,7 +160,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 		    (Sprite){
 			.pos = {32.0f, 112.0f},
 			.hitbox_size = {12.0f, 42.0f},
-			.texture = texture_get(resources, DRESSUP_NAVI),
+			.texture = texture_get(&resources->minigame, DRESSUP_NAVI),
 			.visible = game_state->navi_unlocked &&
 				   game_state->lain.tool_state != HOLDING_NAVI,
 			.z_index = 1,
@@ -171,7 +171,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 	    (Sprite){
 		.pos = {32.0f, 192.0f},
 		.hitbox_size = {12.0f, 42.0f},
-		.texture = texture_get(resources, DRESSUP_SCREWDRIVER),
+		.texture = texture_get(&resources->minigame, DRESSUP_SCREWDRIVER),
 		.visible = game_state->screwdriver_unlocked &&
 			   game_state->lain.tool_state != HOLDING_SCREWDRIVER,
 		.z_index = 1,
@@ -180,7 +180,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 	make_sprite(&dressup->background,
 		    (Sprite){
 			.pos = {0.0f, 0.0f},
-			.texture = texture_get(resources, LAIN_ROOM),
+			.texture = texture_get(&resources->minigame, LAIN_ROOM),
 			.visible = true,
 			.z_index = 0,
 		    });
@@ -191,7 +191,7 @@ static void init_dressup_sprites(Resources *resources, GameState *game_state,
 					       .z_index = 2,
 					   });
 
-	sprite_set_animation(resources, game_state->time, &dressup->lain.sprite,
+	sprite_set_animation(&resources->minigame, game_state->time, &dressup->lain.sprite,
 			     game_state->lain.walk_animation);
 }
 
@@ -276,7 +276,7 @@ void update_dressup(Resources *resources, Menu *menu, GameState *game_state,
 
 		lain->move_state = LEAVING;
 
-		sprite_set_animation(resources, game_state->time, &lain->sprite,
+		sprite_set_animation(&resources->minigame, game_state->time, &lain->sprite,
 				     game_state->lain.leave_animation);
 
 		depth_sort(dressup->scene.sprites,
@@ -326,7 +326,7 @@ void update_dressup(Resources *resources, Menu *menu, GameState *game_state,
 			depth_sort(dressup->scene.sprites,
 				   cvector_size(dressup->scene.sprites));
 		} else {
-			sprite_try_next_frame(resources, game_state->time,
+			sprite_try_next_frame(&resources->minigame, game_state->time,
 					      &lain->sprite);
 		}
 
@@ -334,11 +334,11 @@ void update_dressup(Resources *resources, Menu *menu, GameState *game_state,
 	}
 	case LEAVING: {
 		if (sprite_animation_is_last_frame(&lain->sprite)) {
-			destroy_minigame(resources->textures, menu, minigame,
+			destroy_minigame(resources->main.textures, menu, minigame,
 					 window);
 			return;
 		} else {
-			sprite_try_next_frame(resources, game_state->time,
+			sprite_try_next_frame(&resources->minigame, game_state->time,
 					      &lain->sprite);
 		}
 
@@ -353,7 +353,7 @@ int start_dressup(Menu *menu, Resources *resources, GameState *game_state,
 		  GLFWwindow *main_window)
 {
 	if (!(make_window(minigame_window, MINIGAME_WIDTH, MINIGAME_HEIGHT,
-			  "lain dress up", main_window, true))) {
+			  "lain dress up", main_window, true, NULL))) {
 		printf("Failed to create dressup window.\n");
 		return 0;
 	}
@@ -371,7 +371,7 @@ int start_dressup(Menu *menu, Resources *resources, GameState *game_state,
 	minigame->last_updated = game_state->time;
 
 	menu->dressup_button.texture =
-	    texture_get(resources, DRESSUP_BUTTON_ACTIVE);
+	    texture_get(&resources->main, DRESSUP_BUTTON_ACTIVE);
 
 	play_sound(SND_115);
 
@@ -537,9 +537,9 @@ void handle_dressup_event(DressUpEvent event, void *object, Engine *engine)
 	Sprite *screwdriver_icon = &engine->menu.screwdriver_icon;
 	if (game_state->lain.tool_state == HOLDING_SCREWDRIVER) {
 		screwdriver_icon->texture =
-		    texture_get(resources, SCREWDRIVER_ICON_ACTIVE);
+		    texture_get(&resources->minigame, SCREWDRIVER_ICON_ACTIVE);
 	} else {
 		screwdriver_icon->texture =
-		    texture_get(resources, SCREWDRIVER_ICON);
+		    texture_get(&resources->minigame, SCREWDRIVER_ICON);
 	}
 }

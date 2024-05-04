@@ -6,8 +6,11 @@
 #include "sprite.h"
 #include "texture.h"
 
-static int init_texture(Texture *texture, TextureID texture_id)
+static int init_texture(GLResources *resources, Texture *texture, TextureID texture_id)
 {
+	GLFWwindow* prev_context = glfwGetCurrentContext();
+	glfwMakeContextCurrent(resources->context);
+
 	texture->id = texture_id;
 
 	int width, height, nr_channels;
@@ -34,15 +37,17 @@ static int init_texture(Texture *texture, TextureID texture_id)
 
 	free(data);
 
+	glfwMakeContextCurrent(prev_context);
+
 	return 1;
 }
 
-Texture *texture_get(Resources *resources, int texture_id)
+Texture *texture_get(GLResources *resources, int texture_id)
 {
 	Texture *texture = &resources->textures[texture_id];
 
 	if (!texture->gl_id) {
-		if (!init_texture(texture, texture_id)) {
+		if (!init_texture(resources, texture, texture_id)) {
 			printf("Failed to initialize texture %d.\n",
 			       texture_id);
 			// TODO not sure what to do here
@@ -52,7 +57,7 @@ Texture *texture_get(Resources *resources, int texture_id)
 	return texture;
 }
 
-void textures_init(Resources *resources)
+void textures_init(GLResources *resources)
 {
 	for (int i = 0; i < MAX_TEXTURE_COUNT; i++) {
 		resources->textures[i] = (Texture){0};

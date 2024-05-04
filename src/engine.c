@@ -26,7 +26,7 @@ int engine_init(Engine *engine)
 {
 	// init main (menu) window
 	if (!(make_window(&engine->main_window, COLLAPSED_MENU_WIDTH,
-			  COLLAPSED_MENU_HEIGHT, "lain", NULL, false))) {
+			  COLLAPSED_MENU_HEIGHT, "lain", NULL, false, engine))) {
 		printf("Failed to create main window.\n");
 		return 0;
 	}
@@ -69,7 +69,7 @@ static void engine_render(Engine *engine, double now)
 
 	update_menu(menu, game_state, main_window, resources);
 
-	draw_scene(&menu->scene, main_window, resources->shaders);
+	draw_scene(&menu->scene, main_window, resources->main.shaders);
 //	glfwSwapBuffers(main_window);
 //	emscripten_webgl_commit_frame();
 
@@ -120,7 +120,7 @@ void engine_stop(Engine *engine)
 	cJSON_Delete(resources->animation_data);
 
 	if (minigame->type != NO_MINIGAME) {
-		destroy_minigame(resources->textures, menu, minigame,
+		destroy_minigame(resources->main.textures, menu, minigame,
 				 engine->minigame_window);
 	}
 

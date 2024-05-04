@@ -63,17 +63,17 @@ void draw_minigame(Resources *resources, GLFWwindow *minigame_window,
 	switch (minigame->type) {
 	case KUMASHOOT:
 		draw_scene(&minigame->current.kumashoot.scene, minigame_window,
-			   resources->shaders);
+			   resources->minigame.shaders);
 		break;
 	case DRESSUP:
 		draw_scene(&minigame->current.dressup.scene, minigame_window,
-			   resources->shaders);
+			   resources->minigame.shaders);
 		break;
 	case THEATER: {
 		Theater *theater = &minigame->current.theater;
 		if (theater->type != THEATER_MOVIE) {
 			draw_scene(&theater->scene, minigame_window,
-				   resources->shaders);
+				   resources->minigame.shaders);
 		}
 		break;
 	}
