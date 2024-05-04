@@ -452,7 +452,7 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 
 		if (theater_preview->visible) {
 			if (engine->minigame.type != THEATER) {
-				play_sound(&resources->audio_engine, SND_114);
+				play_sound(SND_114);
 
 				menu->theater_preview.texture = texture_get(
 				    resources,
@@ -462,13 +462,13 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 			}
 		} else {
 			if (engine->menu.collapsed) {
-				play_sound(&resources->audio_engine, SND_112);
+				play_sound(SND_112);
 
 				sprite_set_animation(
 				    resources, engine->game_state.time, main_ui,
 				    MAIN_UI_EXPAND_ANIMATION);
 			} else if (engine->minigame.type != DRESSUP) {
-				play_sound(&resources->audio_engine, SND_113);
+				play_sound(SND_113);
 
 				sprite_set_animation(
 				    resources, engine->game_state.time, main_ui,
@@ -483,9 +483,9 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 			Sprite *theater_preview = &menu->theater_preview;
 
 			if (theater_preview->visible) {
-				play_sound(&resources->audio_engine, SND_111);
+				play_sound(SND_111);
 			} else {
-				play_sound(&resources->audio_engine, SND_110);
+				play_sound(SND_110);
 			}
 
 			theater_preview->visible = !theater_preview->visible;
@@ -503,9 +503,9 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 
 		if (!menu->collapsed) {
 			if (score_preview->visible) {
-				play_sound(&resources->audio_engine, SND_111);
+				play_sound(SND_111);
 			} else {
-				play_sound(&resources->audio_engine, SND_110);
+				play_sound(SND_110);
 			}
 			score_preview->visible = !score_preview->visible;
 			score->visible = !score->visible;
@@ -517,20 +517,20 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 		switch (minigame_type) {
 		case THEATER:
 		case DRESSUP: {
-			play_sound(&resources->audio_engine, SND_110);
+			play_sound(SND_110);
 
 			glfwSetWindowShouldClose(engine->minigame_window, 1);
 			engine->minigame.queued_minigame = KUMASHOOT;
 			break;
 		}
 		case KUMASHOOT: {
-			play_sound(&resources->audio_engine, SND_111);
+			play_sound(SND_111);
 
 			glfwSetWindowShouldClose(engine->minigame_window, 1);
 			break;
 		}
 		case NO_MINIGAME: {
-			play_sound(&resources->audio_engine, SND_110);
+			play_sound(SND_110);
 
 			engine->minigame.queued_minigame = KUMASHOOT;
 			break;
@@ -548,20 +548,20 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 
 		switch (minigame_type) {
 		case DRESSUP: {
-			play_sound(&resources->audio_engine, SND_111);
+			play_sound(SND_111);
 
 			glfwSetWindowShouldClose(engine->minigame_window, 1);
 			break;
 		}
 		case KUMASHOOT: {
-			play_sound(&resources->audio_engine, SND_110);
+			play_sound(SND_110);
 
 			glfwSetWindowShouldClose(engine->minigame_window, 1);
 			engine->minigame.queued_minigame = DRESSUP;
 			break;
 		}
 		case NO_MINIGAME: {
-			play_sound(&resources->audio_engine, SND_110);
+			play_sound(SND_110);
 
 			engine->minigame.queued_minigame = DRESSUP;
 			break;
@@ -580,7 +580,7 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 			break;
 		}
 		case KUMASHOOT: {
-			play_sound(&resources->audio_engine, SND_111);
+			play_sound(SND_111);
 
 			glfwSetWindowShouldClose(engine->minigame_window, 1);
 			engine->minigame.queued_minigame = THEATER;
@@ -591,7 +591,7 @@ void handle_menu_event(MenuEvent event, Engine *engine)
 			break;
 		}
 		case NO_MINIGAME: {
-			play_sound(&resources->audio_engine, SND_110);
+			play_sound(SND_110);
 
 			engine->minigame.queued_minigame = THEATER;
 			break;

@@ -9,7 +9,8 @@ static GLuint compile_shader(GLenum shader_type, const GLchar *shader_source);
 static GLint check_shader_compile_errors(GLuint shader);
 static GLint check_shader_program_link_errors(GLuint program);
 
-static char barrier_quad_fragment[] = "#version 330\n"
+static char barrier_quad_fragment[] = "#version 300 es\n"
+				      "precision highp float;"
 				      "out vec4 FragColor;"
 
 				      "void main()"
@@ -20,13 +21,14 @@ static char barrier_quad_fragment[] = "#version 330\n"
 // manually written every index case because having the index as a non-constant
 // expression was causing issues on very old drivers
 static char quad_fragment[] =
-    "#version 330\n"
+    "#version 300 es\n"
+    "precision highp float;"
     "out vec4 FragColor;"
 
     "in vec2 v_TexCoord;"
     "in float v_TexIndex;"
 
-    "uniform sampler2D u_Textures[20];"
+    "uniform sampler2D u_Textures[16];"
 
     "void main()"
     "{"
@@ -50,10 +52,10 @@ static char quad_fragment[] =
     "}";
 
 static char quad_vertex[] =
-    "#version 330\n"
-    "layout (location = 0) in vec2 a_Pos;"
-    "layout (location = 1) in vec2 a_TexCoord;"
-    "layout (location = 2) in float a_TexIndex;"
+    "#version 300 es\n"
+    "in vec2 a_Pos;"
+    "in vec2 a_TexCoord;"
+    "in float a_TexIndex;"
 
     "out vec2 v_TexCoord;"
     "out float v_TexIndex;"
@@ -70,7 +72,8 @@ static char quad_vertex[] =
     "}";
 
 static char movie_fragment[] =
-    "#version 330 core\n"
+    "#version 300 es\n"
+    "precision highp float;"
     "out vec4 FragColor;"
 
     "in vec2 v_TexCoords;"
@@ -82,9 +85,10 @@ static char movie_fragment[] =
     "FragColor = texture(u_screenTexture, v_TexCoords);"
     "}";
 
-static char movie_vertex[] = "#version 330\n"
-			     "layout (location = 0) in vec2 a_Pos;"
-			     "layout (location = 1) in vec2 a_TexCoords;"
+static char movie_vertex[] =
+	   "#version 300 es\n"
+			     "in vec2 a_Pos;"
+			     "in vec2 a_TexCoords;"
 
 			     "out vec2 v_TexCoords;"
 
@@ -109,6 +113,15 @@ static ShaderProgram create_shader(const char *vertex, const char *fragment)
 	GLuint shader_program = glCreateProgram();
 	glAttachShader(shader_program, vertex_shader);
 	glAttachShader(shader_program, fragment_shader);
+
+	if (vertex == quad_vertex || vertex == movie_vertex) {
+		glBindAttribLocation(shader_program, 0, "a_Pos");
+		glBindAttribLocation(shader_program, 1, "a_TexCoord");
+	}
+
+	if (vertex == quad_vertex)
+		glBindAttribLocation(shader_program, 2, "a_TexIndex");
+
 	glLinkProgram(shader_program);
 
 	glDeleteShader(vertex_shader);

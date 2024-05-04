@@ -1,7 +1,5 @@
 #pragma once
 
-#include "miniaudio.h"
-
 typedef enum {
 	SND_110,
 	SND_111,
@@ -16,5 +14,5 @@ typedef enum {
 	SND_120,
 } SoundID;
 
-void play_sound(ma_engine *audio_engine, SoundID id);
-int sounds_init(ma_engine *audio_engine);
+void play_sound(SoundID id);
+int sounds_init();

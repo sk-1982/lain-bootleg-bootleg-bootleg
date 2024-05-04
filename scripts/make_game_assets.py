@@ -328,7 +328,7 @@ def apply_mask(img_src, mask_src):
         img = img.convert("RGBA")
         mask = mask.convert("1")
         img.paste(0, mask=mask)
-        return img
+        return img.transpose(Image.FLIP_TOP_BOTTOM)
 
 
 DECOMPRESSED_DIR = "./extracted/sprites/decompressed/"

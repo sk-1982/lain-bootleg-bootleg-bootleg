@@ -305,7 +305,7 @@ static void update_progress(Resources *resources, GameState *game_state, int by)
 	}
 
 	if (new_item_unlocked) {
-		play_sound(&resources->audio_engine, SND_120);
+		play_sound(SND_120);
 	}
 }
 
@@ -343,7 +343,7 @@ static void update_character(Scene *scene, GameState *game_state,
 	case SCREWDRIVER_LAIN: {
 		if (sprite->animation_frame->index == 20 &&
 		    !character->exploded) {
-			play_sound(&resources->audio_engine, SND_119);
+			play_sound(SND_119);
 			character->exploded = true;
 		}
 
@@ -666,7 +666,7 @@ int start_kumashoot(Menu *menu, Resources *resources, GameState *game_state,
 void handle_kumashoot_event(KumaShootEvent event, Bear *bear, Engine *engine)
 {
 	if (event == CHARACTER_CLICK && !bear->revealed && !bear->is_smoke) {
-		play_sound(&engine->resources.audio_engine, SND_118);
+		play_sound(SND_118);
 
 		KumaShoot *kumashoot = &engine->minigame.current.kumashoot;
 

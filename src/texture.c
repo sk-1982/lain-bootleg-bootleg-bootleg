@@ -1,22 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <emscripten/emscripten.h>
 
 #include "resources.h"
 #include "sprite.h"
-#include "stb_image.h"
 #include "texture.h"
 
 static int init_texture(Texture *texture, TextureID texture_id)
 {
 	texture->id = texture_id;
 
-	stbi_set_flip_vertically_on_load(true);
-
 	int width, height, nr_channels;
 
 	char file_path[32];
-	sprintf(file_path, "./res/sprites/%d.png", texture_id);
-	unsigned char *data =
-	    stbi_load(file_path, &width, &height, &nr_channels, 0);
+	sprintf(file_path, "/res/sprites/%d.png", texture_id);
+	char *data =
+	    emscripten_get_preloaded_image_data(file_path, &width, &height);
 
 	if (data == NULL) {
 		printf("Failed to load texture.\n");
@@ -33,7 +32,7 @@ static int init_texture(Texture *texture, TextureID texture_id)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	stbi_image_free(data);
+	free(data);
 
 	return 1;
 }

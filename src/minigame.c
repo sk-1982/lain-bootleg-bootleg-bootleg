@@ -4,9 +4,6 @@
 #include "scene.h"
 #include "theater.h"
 
-#include <mpv/client.h>
-#include <mpv/render_gl.h>
-
 void destroy_minigame(Texture *textures, Menu *menu, Minigame *minigame,
 		      GLFWwindow *minigame_window)
 {

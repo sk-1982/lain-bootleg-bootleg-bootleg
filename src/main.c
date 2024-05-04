@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <emscripten/emscripten.h>
 #include "engine.h"
 
 static void error_callback(int error, const char *description)
@@ -28,6 +28,7 @@ static int init_glfw()
 int main(void)
 {
 	if (!init_glfw()) {
+		printf("Failed to initialize glfw\n");
 		return -1;
 	}
 
@@ -38,8 +39,6 @@ int main(void)
 	};
 
 	engine_run(&engine);
-
-	engine_stop(&engine);
 
 	return 0;
 }

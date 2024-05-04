@@ -7,20 +7,6 @@
 #define MOVIE_WIDTH 400
 #define MOVIE_HEIGHT 300
 
-#ifdef HAVE_MPV_DESTROY
-  #define MPV_DESTROY mpv_destroy
-#else
-  #define MPV_DESTROY mpv_detach_destroy
-#endif
-
-static void *get_proc_address_mpv(void *fn_ctx, const char *name)
-{
-	return (void *)glfwGetProcAddress(name);
-}
-
-static _Bool mpv_events = false;
-static void on_mpv_events(void *ctx) { mpv_events = true; }
-
 static void init_movie_buffers(Movie *movie)
 {
 	glGenVertexArrays(1, &movie->VAO);
@@ -84,40 +70,6 @@ int movie_init(Movie *movie)
 		return 0;
 	}
 
-	movie->mpv_handle = mpv_create();
-	if (movie->mpv_handle == NULL) {
-		printf("Failed to create mpv context.\n");
-		return 0;
-	}
-
-	if (mpv_initialize(movie->mpv_handle) < 0) {
-		printf("Failed to initialize mpv context.\n");
-		return 0;
-	}
-
-	mpv_request_log_messages(movie->mpv_handle, "debug");
-
-	mpv_render_param params[] = {
-	    {MPV_RENDER_PARAM_API_TYPE, MPV_RENDER_API_TYPE_OPENGL},
-	    {MPV_RENDER_PARAM_OPENGL_INIT_PARAMS,
-	     &(mpv_opengl_init_params){
-		 .get_proc_address = get_proc_address_mpv,
-	     }},
-	    {0}};
-
-	if (mpv_render_context_create(&movie->mpv_render_ctx, movie->mpv_handle,
-				      params) < 0) {
-
-		printf("Failed to create mpv render context.\n");
-		return 0;
-	}
-
-	// set callbacks
-	mpv_set_wakeup_callback(movie->mpv_handle, on_mpv_events, NULL);
-
-	const char *cmd[] = {"loadfile", "./res/lain_mov.dat", NULL};
-	mpv_command_async(movie->mpv_handle, 0, cmd);
-
 	return 1;
 }
 
@@ -127,42 +79,7 @@ _Bool movie_render(ShaderProgram shader, Movie *movie)
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	if (mpv_events) {
-		mpv_events = false;
-		while (1) {
-			mpv_event *event = mpv_wait_event(movie->mpv_handle, 0);
-
-			if (event->event_id == MPV_EVENT_END_FILE) {
-				return false;
-			}
-
-			if (event->event_id == MPV_EVENT_NONE) {
-
-				break;
-			}
-
-			if (event->event_id == MPV_EVENT_LOG_MESSAGE) {
-				mpv_event_log_message *msg = event->data;
-				if (strstr(msg->text, "DR image"))
-					printf("log: %s", msg->text);
-				continue;
-			}
-
-			printf("event: %s\n", mpv_event_name(event->event_id));
-		}
-	}
-
-	mpv_render_param params[] = {{MPV_RENDER_PARAM_OPENGL_FBO,
-				      &(mpv_opengl_fbo){
-					  .fbo = movie->FBO,
-					  .w = MINIGAME_WIDTH,
-					  .h = MINIGAME_HEIGHT,
-				      }},
-				     {MPV_RENDER_PARAM_FLIP_Y, &(int){1}},
-				     {0}};
-	mpv_render_context_render(movie->mpv_render_ctx, params);
-
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -179,6 +96,5 @@ _Bool movie_render(ShaderProgram shader, Movie *movie)
 
 void movie_free(Movie *movie)
 {
-	mpv_render_context_free(movie->mpv_render_ctx);
-	MPV_DESTROY(movie->mpv_handle);
+	
 }

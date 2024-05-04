@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <time.h>
+#include <emscripten/emscripten.h>
+#include <emscripten/html5.h>
 
 #include "animations.h"
 #include "cJSON.h"
@@ -68,8 +70,8 @@ static void engine_render(Engine *engine, double now)
 	update_menu(menu, game_state, main_window, resources);
 
 	draw_scene(&menu->scene, main_window, resources->shaders);
-
-	glfwSwapBuffers(main_window);
+//	glfwSwapBuffers(main_window);
+//	emscripten_webgl_commit_frame();
 
 	if (minigame->type != NO_MINIGAME && can_refresh(now, minigame)) {
 		glfwMakeContextCurrent(minigame_window);
@@ -83,7 +85,8 @@ static void engine_render(Engine *engine, double now)
 		if (minigame->type != NO_MINIGAME) {
 			draw_minigame(resources, minigame_window, minigame);
 
-			glfwSwapBuffers(minigame_window);
+//			glfwSwapBuffers(minigame_window);
+//			emscripten_webgl_commit_frame();
 
 			minigame->last_updated = now;
 		}
@@ -104,6 +107,7 @@ static void engine_renderloop(Engine *engine)
 {
 	while (!glfwWindowShouldClose(engine->main_window)) {
 		engine_render(engine, glfwGetTime());
+		emscripten_sleep(32);
 	}
 }
 
@@ -135,15 +139,10 @@ void engine_stop(Engine *engine)
 		}
 	}
 
-	ma_engine_uninit(&engine->resources.audio_engine);
 	glfwTerminate();
 }
 
 void engine_run(Engine *engine)
 {
 	engine_renderloop(engine);
-
-	if (!write_save_file(engine)) {
-		printf("Failed to write save file.\n");
-	};
 }

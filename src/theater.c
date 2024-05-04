@@ -272,7 +272,7 @@ void update_theater(Resources *resources, Menu *menu, GameState *game_state,
 	}
 
 	if (!was_animated || glfwWindowShouldClose(window)) {
-		play_sound(&resources->audio_engine, SND_111);
+		play_sound(SND_111);
 		destroy_minigame(resources->textures, menu, minigame, window);
 		return;
 	}
