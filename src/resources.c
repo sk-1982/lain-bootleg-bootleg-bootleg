@@ -20,6 +20,8 @@ int init_resources(Resources *resources)
 }
 
 int init_glresources(GLResources* resources) {
+	if (resources->initialized) return 1;
+
 	textures_init(resources);
 
 	if (!shaders_init(resources->shaders)) {
@@ -28,6 +30,8 @@ int init_glresources(GLResources* resources) {
 	}
 
 	fonts_init(resources);
+
+	resources->initialized = 1;
 
 	return 1;
 }

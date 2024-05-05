@@ -34,6 +34,9 @@ int engine_init(Engine *engine)
 	create_canvas();
 	preload_video();
 
+	engine->resources.minigame.initialized = false;
+	engine->resources.main.initialized = false;
+
 	// init main (menu) window
 	if (!(make_window(&engine->main_window, COLLAPSED_MENU_WIDTH,
 			  COLLAPSED_MENU_HEIGHT, "lain", NULL, false, engine))) {

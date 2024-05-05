@@ -13,6 +13,7 @@ typedef struct glresources {
 	Texture textures[MAX_TEXTURE_COUNT];
 	struct resources* resources;
 	GLFWwindow* context;
+	_Bool initialized;
 } GLResources;
 
 typedef struct resources {
