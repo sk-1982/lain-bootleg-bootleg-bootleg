@@ -281,7 +281,7 @@ def make_bushes(curr_dir):
 
     for i, pos in enumerate(bush_poses):
         sprite_id = "{}.png".format(i + 517)
-        bush_img = cv2.imread(path.join(curr_dir, sprite_id), -1)
+        bush_img = cv2.flip(cv2.imread(path.join(curr_dir, sprite_id), -1), 0)
 
         x = pos[0]
         y = pos[1]
@@ -294,7 +294,7 @@ def make_bushes(curr_dir):
         remove(path.join(curr_dir, sprite_id))
 
     move(path.join(curr_dir, "526.png"), path.join(curr_dir, "494.png"))
-    cv2.imwrite(path.join(curr_dir, "495.png"), res)
+    cv2.imwrite(path.join(curr_dir, "495.png"), cv2.flip(res, 0))
 
 
 def make_fonts(curr_dir):
