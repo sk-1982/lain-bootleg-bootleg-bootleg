@@ -5,7 +5,7 @@
 #include "shader.h"
 
 typedef struct {
-	GLuint texture_buffer;
+	GLuint texture_buffer[2];
 	GLuint FBO;
 	GLuint VBO;
 	GLuint VAO;

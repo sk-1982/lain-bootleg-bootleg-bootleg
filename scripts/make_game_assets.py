@@ -12,6 +12,7 @@ import json
 import collections
 import pathlib
 import extract_n_decompress
+import subprocess
 
 # theater animation ids
 # inbetween these are "generic theaters", where lain simply walks past a scene
@@ -404,7 +405,23 @@ def main():
         with open(os.path.join(os.getcwd(), "res", "animations.json"), "w") as f:
             f.write(json.dumps(final, indent=2))
 
-    copyfile(MOV_FILE, os.path.join(os.getcwd(), "res", "lain_mov.dat"))
+    print("Encoding movie...")
+    subprocess.call(['ffmpeg',
+                     '-hide_banner',
+                     '-loglevel', 'info',
+                     '-i', MOV_FILE,
+                     '-y',
+                     '-vf', 'vflip',
+                     '-c:v', 'libvpx-vp9',
+                     '-deadline', 'best',
+                     '-row-mt', '1',
+                     '-pix_fmt', 'yuv420p',
+                     '-crf', '33',
+                     '-b:v', '0',
+                     '-b:a', '64k',
+                     '-ar', '24000',
+                     os.path.join(os.getcwd(), "res", "lain_mov.webm")
+                     ])
 
     move(os.path.join(os.getcwd(), "res"), os.path.join(os.getcwd(), "../res"))
 

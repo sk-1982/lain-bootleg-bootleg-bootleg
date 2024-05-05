@@ -32,17 +32,50 @@ set(SOURCES
    src/movie.c
 )
 
+set_source_files_properties(src/movie.c PROPERTIES
+        OBJECT_DEPENDS ${PROJECT_SOURCE_DIR}/src/library.js
+)
+set_source_files_properties(src/engine.c PROPERTIES
+        OBJECT_DEPENDS ${PROJECT_SOURCE_DIR}/src/library.js
+)
+
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
-set(USE_FLAGS "--use-preload-plugins --preload-file=../res/sprites/@/res/sprites/ --preload-file=../res/sounds/@/res/sounds/  --embed-file=../res/animations.json@/res/animations.json --use-port=contrib.glfw3 -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1 -O2 -s LEGACY_GL_EMULATION=0  -s GL_UNSAFE_OPTS=1 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s ALLOW_MEMORY_GROWTH=1 -s ASYNCIFY=1 -s EXPORTED_FUNCTIONS=setValue,_main -s USE_SDL")
+set(USE_FLAGS --use-preload-plugins
+        --preload-file=${PROJECT_SOURCE_DIR}/res/sprites/@/res/sprites/
+        --preload-file=${PROJECT_SOURCE_DIR}/res/sounds/@/res/sounds/
+        --embed-file=${PROJECT_SOURCE_DIR}/res/animations.json@/res/animations.json
+        --use-port=contrib.glfw3
+        --bind
+        --js-library=${PROJECT_SOURCE_DIR}/src/library.js
+        -s SAFE_HEAP=1
+        -s WASM=1
+        -s LEGACY_GL_EMULATION=0
+        -s GL_UNSAFE_OPTS=1
+        -s FULL_ES3=1
+        -s MIN_WEBGL_VERSION=2
+        -s MAX_WEBGL_VERSION=2
+        -s ALLOW_MEMORY_GROWTH=1
+        -s ASYNCIFY=1
+        -s USE_SDL
+        -s EXPORTED_FUNCTIONS=setValue,_main)
 set(CMAKE_C_FLAGS "-s USE_SDL")
 
-if(DEBUG)
+if(DEFINED DEBUG)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
-    set(USE_FLAGS "-g3 -gsource-map -gseparate-dwarf ${USE_FLAGS}")
+    set(USE_FLAGS -g3 -gsource-map -gseparate-dwarf -s DISABLE_EXCEPTION_CATCHING=0 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 ${USE_FLAGS})
+else()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+    set(USE_FLAGS -O3 ${USE_FLAGS})
 endif()
 
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS ${USE_FLAGS})
+list(JOIN USE_FLAGS " " USE_FLAGS)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "${USE_FLAGS}")
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/res/lain_mov.webm
+        ${CMAKE_CURRENT_BINARY_DIR}/lain_mov.webm)

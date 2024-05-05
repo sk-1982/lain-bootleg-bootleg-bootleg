@@ -22,8 +22,18 @@
 
 #include "input.h"
 
+extern void preload_video(void);
+EM_JS(void, create_canvas, (), {
+				   const c = document.querySelector('.emscripten_border');
+				   const canvas = document.createElement('canvas');
+				   canvas.id = 'canvas2';
+				   c.appendChild(canvas);
+			       });
 int engine_init(Engine *engine)
 {
+	create_canvas();
+	preload_video();
+
 	// init main (menu) window
 	if (!(make_window(&engine->main_window, COLLAPSED_MENU_WIDTH,
 			  COLLAPSED_MENU_HEIGHT, "lain", NULL, false, engine))) {
@@ -107,7 +117,7 @@ static void engine_renderloop(Engine *engine)
 {
 	while (!glfwWindowShouldClose(engine->main_window)) {
 		engine_render(engine, glfwGetTime());
-		emscripten_sleep(32);
+		emscripten_sleep(16);
 	}
 }
 

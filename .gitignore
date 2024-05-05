@@ -12,3 +12,4 @@ scripts/binaries
 .dir-locals.el
 embedded.*
 .idea
+cmake-build-debug
