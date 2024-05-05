@@ -251,7 +251,7 @@ void update_theater(Resources *resources, Menu *menu, GameState *game_state,
 		for (int i = 0; i < cvector_size(theater->scene.sprites); ++i) {
 			Sprite *curr = theater->scene.sprites[i];
 			if (curr->animation != NULL) {
-				sprite_try_next_frame(&resources->main,
+				sprite_try_next_frame(&resources->minigame,
 						      game_state->time, curr);
 				was_animated = true;
 			}

@@ -541,10 +541,10 @@ void handle_dressup_event(DressUpEvent event, void *object, Engine *engine)
 	Sprite *screwdriver_icon = &engine->menu.screwdriver_icon;
 	if (game_state->lain.tool_state == HOLDING_SCREWDRIVER) {
 		screwdriver_icon->texture =
-		    texture_get(&resources->minigame, SCREWDRIVER_ICON_ACTIVE);
+		    texture_get(&resources->main, SCREWDRIVER_ICON_ACTIVE);
 	} else {
 		screwdriver_icon->texture =
-		    texture_get(&resources->minigame, SCREWDRIVER_ICON);
+		    texture_get(&resources->main, SCREWDRIVER_ICON);
 	}
 
 	write_save_file(game_state);
