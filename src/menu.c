@@ -158,6 +158,42 @@ static void init_menu_text_objects(Font *fonts, GameState *game_state,
 	sprintf(menu->score_text.current_text, "%ld", game_state->score);
 }
 
+void collapse_menu(Menu* menu, Resources* resources) {
+	update_menu_time(menu);
+
+	menu->collapsed = true;
+
+	menu->ui_lain.recently_changed_laugh = false;
+	menu->ui_lain.laughing = false;
+	menu->ui_lain.blinking = false;
+	menu->ui_lain.laugh_quarter = menu->current_time->tm_sec / 15;
+
+	Sprite *main_ui = &menu->main_ui;
+
+	sprite_set_to_origin_pos(main_ui);
+	sprite_set_to_origin_pos(&menu->ui_lain.sprite);
+	sprite_set_to_origin_pos(&menu->main_ui_bar);
+
+	menu->clock.pos = (Vector2D){70.0f, 22.0f};
+
+	menu->bear_icon.visible = false;
+	menu->screwdriver_icon.visible = false;
+	menu->paw_icon.visible = false;
+	menu->score_preview.visible = false;
+	menu->theater_preview.visible = false;
+	menu->score_text.visible = false;
+	menu->dressup_button.visible = false;
+	menu->theater_button.visible = false;
+
+	menu->main_ui_bar.texture =
+	    texture_get(&resources->main, MAIN_UI_BAR);
+	menu->main_ui.texture =
+	    texture_get(&resources->main, MAIN_UI_1);
+	menu->theater_button.texture =
+	    texture_get(&resources->main, THEATER_BUTTON);
+	menu->dressup_button.texture = texture_get(&resources->main, DRESSUP_BUTTON);
+}
+
 static void animate_menu(GameState *game_state, Resources *resources,
 			 Menu *menu, GLFWwindow *window)
 {

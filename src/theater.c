@@ -235,7 +235,7 @@ static void init_theater(Resources *resources, GameState *game_state,
 }
 
 void update_theater(Resources *resources, Menu *menu, GameState *game_state,
-		    GLFWwindow *window, Minigame *minigame)
+		    GLFWwindow **window, Minigame *minigame)
 {
 
 	Theater *theater = &minigame->current.theater;
@@ -271,7 +271,7 @@ void update_theater(Resources *resources, Menu *menu, GameState *game_state,
 		was_animated = true;
 	}
 
-	if (!was_animated || glfwWindowShouldClose(window)) {
+	if (!was_animated || glfwWindowShouldClose(*window)) {
 		play_sound(SND_111);
 		destroy_minigame(resources->main.textures, menu, minigame, window);
 		return;

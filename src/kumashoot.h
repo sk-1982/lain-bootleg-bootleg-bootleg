@@ -67,4 +67,4 @@ int start_kumashoot(Menu *menu, Resources *resources, GameState *game_state,
 		    GLFWwindow *main_window);
 void handle_kumashoot_event(KumaShootEvent event, Bear *bear, struct engine *engine);
 void update_kumashoot(Resources *resources, Menu *menu, GameState *game_state,
-		      GLFWwindow *window, struct minigame *minigame);
+		      GLFWwindow **window, struct minigame *minigame);

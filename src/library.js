@@ -2,11 +2,10 @@ addToLibrary({
     preload_video: () => {
         if (Module.lainPreloadedVideo)
             return;
-        console.log('preloading video...');
         const video = document.createElement('video');
         video.autoplay = false;
         video.preload = 'auto';
-        video.src = 'lain_mov.webm';
+        video.src = Module.lainVideoUrl;
         video.load();
         Module.lainPreloadedVideo = video;
         Module.lainVideoPlaying = false;

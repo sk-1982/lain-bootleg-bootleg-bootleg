@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Lain Bootleg</title>
+    <style>
+        * {
+            font-family: "Segoe UI", "SF Pro", "Helvetica Neue", "Helvetica", "Aria", sans-serif;
+        }
+        body {
+            display: flex;
+            gap: .5rem;
+        }
+        .title-bar {
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .title-bar button {
+            width: 3rem;
+            background: #efefef;
+            transition: 100ms;
+            border: none;
+            height: 100%;
+            color: black;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .title-bar button:hover {
+            background: red;
+			color: white;
+        }
+        .title-bar .title {
+            margin-left: .25rem;
+            line-height: 1;
+        }
+        .container {
+            border: solid black 1px;
+            flex-direction: column;
+            height: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <button id="start_button" style="display:none">Start Lain Bootleg</button>
+    <div id="main_window_container" class="container" style="display:none">
+        <div class="title-bar">
+            <span class="title"></span>
+            <button>&#10006;</button>
+        </div>
+        <canvas id="main"></canvas>
+    </div>
+    <div id="minigame_window_container" class="container" style="display:none">
+        <div class="title-bar">
+            <span class="title"></span>
+            <button>&#10006;</button>
+        </div>
+        <canvas id="minigame"></canvas>
+    </div>
+    <script type="module" src="loader.mjs"></script>
+</body>
+</html>

@@ -266,12 +266,12 @@ static void init_dressup_scene(Resources *resources, GameState *game_state,
 }
 
 void update_dressup(Resources *resources, Menu *menu, GameState *game_state,
-		    GLFWwindow *window, Minigame *minigame)
+		    GLFWwindow **window, Minigame *minigame)
 {
 	DressUp *dressup = &minigame->current.dressup;
 	DressUpLain *lain = &dressup->lain;
 
-	if (glfwWindowShouldClose(window) && lain->move_state != LEAVING) {
+	if (glfwWindowShouldClose(*window) && lain->move_state != LEAVING) {
 		play_sound(SND_116);
 
 		lain->move_state = LEAVING;
@@ -296,7 +296,7 @@ void update_dressup(Resources *resources, Menu *menu, GameState *game_state,
 		DressUpObject *currently_grabbed = dressup->currently_grabbed;
 		if (currently_grabbed != NULL) {
 			double x, y;
-			glfwGetCursorPos(window, &x, &y);
+			glfwGetCursorPos(*window, &x, &y);
 			currently_grabbed->sprite.pos = (Vector2D){
 			    x - currently_grabbed->sprite.texture->size.x / 2,
 			    y - currently_grabbed->sprite.texture->size.y / 2};

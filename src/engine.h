@@ -18,6 +18,9 @@ typedef struct engine {
 	Minigame minigame;
 
 	GameState game_state;
+
+	_Bool initialized;
+	_Bool running;
 } Engine;
 
 

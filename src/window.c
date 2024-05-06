@@ -7,6 +7,14 @@
 #include "scene.h"
 #include "window.h"
 
+EM_JS(char*, get_main_window_selector, (), {
+	return stringToNewUTF8(Module.lainMainWindowSelector);
+});
+
+EM_JS(char*, get_minigame_window_selector, (), {
+	return stringToNewUTF8(Module.lainMinigameWindowSelector);
+});
+
 int make_window(GLFWwindow **window, int width, int height, char *name,
 		GLFWwindow *shared_ctx, _Bool centered, Engine* engine)
 {
@@ -15,13 +23,14 @@ int make_window(GLFWwindow **window, int width, int height, char *name,
 	if (!engine)
 		engine = glfwGetWindowUserPointer(shared_ctx);
 
-	if (shared_ctx)
-		emscripten_glfw_set_next_window_canvas_selector("#canvas2");
+	char* selector = shared_ctx ? get_minigame_window_selector() : get_main_window_selector();
+	emscripten_glfw_set_next_window_canvas_selector(selector);
+	free(selector);
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-	*window = glfwCreateWindow(width, height, name, NULL, shared_ctx);
+	*window = glfwCreateWindow(width, height, NULL, NULL, shared_ctx);
 	if (window == NULL) {
 		printf("Failed to initialize window.\n");
 		glfwTerminate();
@@ -32,6 +41,10 @@ int make_window(GLFWwindow **window, int width, int height, char *name,
 	resources->context = *window;
 
 	glfwShowWindow(*window);
+
+	EM_ASM({
+	    Module.lainOnWindowOpen(!!$0, UTF8ToString($1));
+    }, !shared_ctx, name);
 
 	glfwMakeContextCurrent(*window);
 	EM_ASM(GL.currentContext.version = 2);

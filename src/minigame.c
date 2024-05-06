@@ -3,14 +3,17 @@
 #include "resources.h"
 #include "scene.h"
 #include "theater.h"
+#include <emscripten/emscripten.h>
 
 void destroy_minigame(Texture *textures, Menu *menu, Minigame *minigame,
-		      GLFWwindow *minigame_window)
+		      GLFWwindow **minigame_window)
 {
 	menu->bear_icon.texture = &textures[BEAR_ICON];
 	menu->dressup_button.texture = &textures[DRESSUP_BUTTON];
 
-	glfwDestroyWindow(minigame_window);
+	glfwDestroyWindow(*minigame_window);
+	*minigame_window = NULL;
+	EM_ASM(Module.lainOnWindowClose(false));
 
 	switch (minigame->type) {
 	case KUMASHOOT:
@@ -37,7 +40,7 @@ void destroy_minigame(Texture *textures, Menu *menu, Minigame *minigame,
 }
 
 void update_minigame(Resources *resources, GameState *game_state, Menu *menu,
-		     GLFWwindow *minigame_window, Minigame *minigame)
+		     GLFWwindow **minigame_window, Minigame *minigame)
 {
 	switch (minigame->type) {
 	case KUMASHOOT:

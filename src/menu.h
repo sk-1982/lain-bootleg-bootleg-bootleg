@@ -52,6 +52,7 @@ typedef struct {
 
 struct engine;
 
+void collapse_menu(Menu* menu, Resources* resources);
 void init_menu(Menu *menu, GameState *game_state, Resources *resources);
 void update_menu(Menu *menu, GameState *game_state, GLFWwindow *window,
 		 Resources *resources);

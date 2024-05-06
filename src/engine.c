@@ -23,26 +23,35 @@
 #include "input.h"
 
 extern void preload_video(void);
-EM_JS(void, create_canvas, (), {
-				   const c = document.querySelector('.emscripten_border');
-				   const canvas = document.createElement('canvas');
-				   canvas.id = 'canvas2';
-				   c.appendChild(canvas);
-			       });
-int engine_init(Engine *engine)
-{
-	create_canvas();
-	preload_video();
 
-	engine->resources.minigame.initialized = false;
-	engine->resources.main.initialized = false;
-
+static int create_main_window(Engine* engine) {
+	if (engine->main_window) return 1;
 	// init main (menu) window
 	if (!(make_window(&engine->main_window, COLLAPSED_MENU_WIDTH,
 			  COLLAPSED_MENU_HEIGHT, "lain", NULL, false, engine))) {
 		printf("Failed to create main window.\n");
 		return 0;
 	}
+
+	// set user pointer to access engine inside callback function
+	glfwSetWindowUserPointer(engine->main_window, engine);
+	// set callbacks
+	glfwSetMouseButtonCallback(engine->main_window, handle_menu_click);
+
+	return 1;
+}
+
+int engine_init(Engine *engine)
+{
+	if (engine->initialized) return 1;
+
+	preload_video();
+
+	engine->resources.minigame.initialized = false;
+	engine->resources.main.initialized = false;
+
+    if (!create_main_window(engine))
+		return 0;
 
 	if (!init_resources(&engine->resources)) {
 		printf("Failed to initialize resources.\n");
@@ -57,10 +66,7 @@ int engine_init(Engine *engine)
 	engine->minigame.queued_minigame = NO_MINIGAME;
 	engine->minigame.type = NO_MINIGAME;
 
-	// set user pointer to access engine inside callback function
-	glfwSetWindowUserPointer(engine->main_window, engine);
-	// set callbacks
-	glfwSetMouseButtonCallback(engine->main_window, handle_menu_click);
+	engine->initialized = 1;
 
 	return 1;
 }
@@ -83,8 +89,6 @@ static void engine_render(Engine *engine, double now)
 	update_menu(menu, game_state, main_window, resources);
 
 	draw_scene(&menu->scene, main_window, resources->main.shaders);
-//	glfwSwapBuffers(main_window);
-//	emscripten_webgl_commit_frame();
 
 	if (minigame->type != NO_MINIGAME && can_refresh(now, minigame)) {
 		glfwMakeContextCurrent(minigame_window);
@@ -92,14 +96,11 @@ static void engine_render(Engine *engine, double now)
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		update_minigame(resources, game_state, menu, minigame_window,
+		update_minigame(resources, game_state, menu, &engine->minigame_window,
 				minigame);
 
 		if (minigame->type != NO_MINIGAME) {
 			draw_minigame(resources, minigame_window, minigame);
-
-//			glfwSwapBuffers(minigame_window);
-//			emscripten_webgl_commit_frame();
 
 			minigame->last_updated = now;
 		}
@@ -122,42 +123,25 @@ static void engine_renderloop(Engine *engine)
 		engine_render(engine, glfwGetTime());
 		emscripten_sleep(16);
 	}
-}
-
-void engine_stop(Engine *engine)
-{
-	Resources *resources = &engine->resources;
-	Menu *menu = &engine->menu;
-	Minigame *minigame = &engine->minigame;
-
-	cJSON_Delete(resources->animation_data);
-
-	if (minigame->type != NO_MINIGAME) {
-		destroy_minigame(resources->main.textures, menu, minigame,
-				 engine->minigame_window);
-	}
-
-	free_scene(&menu->scene);
-
-	for (int i = 0; i < MAX_ANIMATION_COUNT; i++) {
-		animation_free(&resources->animations[i]);
-	}
-
-	for (int i = 0; i < MAX_THEATER_ANIMATION_COUNT; i++) {
-		TheaterAnimation anim = resources->theater_animations[i];
-		if (anim.initialized) {
-			for (int j = 0; j < anim.layer_count; j++) {
-				animation_free(&anim.layers[j]);
-			}
-		}
-	}
-
-	glfwTerminate();
+	if (engine->minigame.type != NO_MINIGAME)
+	    destroy_minigame(engine->resources.main.textures, &engine->menu, &engine->minigame, &engine->minigame_window);
+	glfwDestroyWindow(engine->main_window);
+	engine->main_window = NULL;
+	EM_ASM(Module.lainOnWindowClose(true));
 }
 
 void engine_run(Engine *engine)
 {
+	if (engine->running) return;
+
+	engine->running = 1;
+
+	collapse_menu(&engine->menu, &engine->resources);
+	if (!create_main_window(engine))
+		return;
 	engine_renderloop(engine);
+
+	engine->running = 0;
 
 	if (!write_save_file(&engine->game_state)) {
 		printf("Failed to write save file.\n");

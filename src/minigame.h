@@ -25,9 +25,9 @@ typedef struct minigame {
 } Minigame;
 
 void destroy_minigame(Texture *textures, Menu *menu, Minigame *minigame,
-		      GLFWwindow *minigame_window);
+		      GLFWwindow **minigame_window);
 void update_minigame(Resources *resources, GameState *game_state, Menu *menu,
-		     GLFWwindow *minigame_window, Minigame *minigame);
+		     GLFWwindow **minigame_window, Minigame *minigame);
 void draw_minigame(Resources *resources, GLFWwindow *minigame_window,
 		   Minigame *minigame);
 void start_queued_minigame(Resources *resources, GameState *game_state,

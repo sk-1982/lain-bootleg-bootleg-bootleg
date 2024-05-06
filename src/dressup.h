@@ -43,4 +43,4 @@ int start_dressup(Menu *menu, Resources *resources, GameState *game_state,
 void handle_dressup_event(DressUpEvent event, void *object,
 			  struct engine *engine);
 void update_dressup(Resources *resources, Menu *menu, GameState *game_state,
-		    GLFWwindow *window, struct minigame *minigame);
+		    GLFWwindow **window, struct minigame *minigame);

@@ -38,16 +38,21 @@ set_source_files_properties(src/movie.c PROPERTIES
 set_source_files_properties(src/engine.c PROPERTIES
         OBJECT_DEPENDS ${PROJECT_SOURCE_DIR}/src/library.js
 )
+set_source_files_properties(src/main.c PROPERTIES
+        OBJECT_DEPENDS "${PROJECT_SOURCE_DIR}/src/extern-post-js.js;${PROJECT_SOURCE_DIR}/example/shell.html;${PROJECT_SOURCE_DIR}/example/loader.mjs"
+)
 
-
-set(CMAKE_EXECUTABLE_SUFFIX ".html")
+set(CMAKE_EXECUTABLE_SUFFIX ".mjs")
 set(USE_FLAGS --use-preload-plugins
         --preload-file=${PROJECT_SOURCE_DIR}/res/sprites/@/res/sprites/
         --preload-file=${PROJECT_SOURCE_DIR}/res/sounds/@/res/sounds/
         --embed-file=${PROJECT_SOURCE_DIR}/res/animations.json@/res/animations.json
         --use-port=contrib.glfw3
-        --bind
         --js-library=${PROJECT_SOURCE_DIR}/src/library.js
+        --extern-post-js=${PROJECT_SOURCE_DIR}/src/extern-post-js.js
+        -s ENVIRONMENT=web
+        -s MODULARIZE=1
+        -s EXPORT_ES6=1
         -s SAFE_HEAP=1
         -s WASM=1
         -s LEGACY_GL_EMULATION=0
@@ -57,8 +62,9 @@ set(USE_FLAGS --use-preload-plugins
         -s MAX_WEBGL_VERSION=2
         -s ALLOW_MEMORY_GROWTH=1
         -s ASYNCIFY=1
-        -s USE_SDL
-        -s EXPORTED_FUNCTIONS=setValue,_main)
+        -s INVOKE_RUN=0
+        -s EXPORTED_FUNCTIONS=setValue,_main,_close_minigame_window,_close_main_window
+)
 set(CMAKE_C_FLAGS "-s USE_SDL")
 
 if(DEFINED DEBUG)
@@ -79,3 +85,13 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/res/lain_mov.webm
         ${CMAKE_CURRENT_BINARY_DIR}/lain_mov.webm)
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/example/shell.html
+        ${CMAKE_CURRENT_BINARY_DIR}/index.html)
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/example/loader.mjs
+        ${CMAKE_CURRENT_BINARY_DIR}/loader.mjs)

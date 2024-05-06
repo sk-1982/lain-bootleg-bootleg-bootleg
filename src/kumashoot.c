@@ -509,12 +509,12 @@ static void update_bear(Resources *resources, GameState *game_state,
 }
 
 void update_kumashoot(Resources *resources, Menu *menu, GameState *game_state,
-		      GLFWwindow *window, Minigame *minigame)
+		      GLFWwindow **window, Minigame *minigame)
 {
 	KumaShoot *kumashoot = &minigame->current.kumashoot;
 	Scene *scene = &kumashoot->scene;
 
-	if (glfwWindowShouldClose(window)) {
+	if (glfwWindowShouldClose(*window)) {
 		destroy_minigame(resources->main.textures, menu, minigame, window);
 		return;
 	}

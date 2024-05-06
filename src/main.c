@@ -9,10 +9,16 @@ static void error_callback(int error, const char *description)
 
 static int init_glfw()
 {
+	static _Bool initialized = 0;
+
+	if (initialized) return 1;
+
 	if (!glfwInit()) {
 		printf("Failed to initialize glfw.\n");
 		return 0;
 	}
+
+	initialized = 1;
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -25,6 +31,8 @@ static int init_glfw()
 	return 1;
 }
 
+Engine engine;
+
 int main(void)
 {
 	if (!init_glfw()) {
@@ -32,7 +40,6 @@ int main(void)
 		return -1;
 	}
 
-	Engine engine;
 	if (!engine_init(&engine)) {
 		printf("Failed to initialize engine. Exiting.\n");
 		return -1;
@@ -40,5 +47,21 @@ int main(void)
 
 	engine_run(&engine);
 
+	return 0;
+}
+
+EMSCRIPTEN_KEEPALIVE int close_main_window() {
+	if (engine.main_window) {
+		glfwSetWindowShouldClose(engine.main_window, GLFW_TRUE);
+		return 1;
+	}
+	return 0;
+}
+
+EMSCRIPTEN_KEEPALIVE int close_minigame_window() {
+	if (engine.minigame_window) {
+		glfwSetWindowShouldClose(engine.minigame_window, GLFW_TRUE);
+		return 1;
+	}
 	return 0;
 }
