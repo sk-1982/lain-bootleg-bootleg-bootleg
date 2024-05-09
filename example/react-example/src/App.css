@@ -1,0 +1,33 @@
+.App {
+    display: flex;
+    gap: .5rem;
+}
+
+.title-bar {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+.title-bar button {
+    width: 3rem;
+    background: #efefef;
+    transition: 100ms;
+    border: none;
+    height: 100%;
+    color: black;
+    cursor: pointer;
+    margin-left: auto;
+}
+.title-bar button:hover {
+    background: red;
+    color: white;
+}
+.title-bar .title {
+    margin-left: .25rem;
+    line-height: 1;
+}
+.container {
+    border: solid black 1px;
+    flex-direction: column;
+    height: fit-content;
+}

@@ -10,9 +10,12 @@ export class LainCanvasNotFoundError extends Error {
 }
 
 class Bootleg extends EventTarget {
+    #started = false;
+    #initializing = false;
+    module = null;
+
     constructor() {
         super();
-        this.module = null;
     }
 
     #ensureInitialized() {
@@ -34,6 +37,10 @@ class Bootleg extends EventTarget {
     }
 
     async init(options) {
+        if (this.module) return;
+        if (this.#initializing) return;
+        this.#initializing = true;
+
         this.module = await Module({
             locateFile: (path, prefix) => {
                 if (path.endsWith('.wasm') && options?.wasmPath)
@@ -47,6 +54,7 @@ class Bootleg extends EventTarget {
             lainVideoUrl: options?.moviePath ?? 'lain_mov.webm',
             lainOnWindowClose: (isMain) => {
                 const detail = { isMain };
+                if (isMain) this.#started = false;
                 this.dispatchEvent(new CustomEvent(`${isMain ? 'main' : 'minigame'}WindowClose`, { detail }));
                 this.dispatchEvent(new CustomEvent('windowClose', { detail }));
             },
@@ -61,6 +69,8 @@ class Bootleg extends EventTarget {
     start() {
         this.#ensureInitialized();
         this.#ensureCanvases();
+        if (this.#started) return;
+        this.#started = true;
         return this.module._main();
     }
 
@@ -71,6 +81,10 @@ class Bootleg extends EventTarget {
 
     closeMinigameWindow() {
         return this.module._close_minigame_window();
+    }
+
+    get initialized() {
+        return !!this.module;
     }
 }
 

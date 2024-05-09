@@ -1,0 +1,16 @@
+{
+  "name": "lain-bootleg-bootleg-bootleg",
+  "version": "1.0.0",
+  "description": "emscripten port of lain-bootleg-bootleg",
+  "directories": {
+    "example": "example"
+  },
+  "author": "sk-1982",
+  "type": "module",
+  "exports": {
+    ".": "./build/lain-bootleg-bootleg.mjs",
+    "./lain-bootleg-bootleg.wasm": "./build/lain-bootleg-bootleg.wasm",
+    "./lain-bootleg-bootleg.data": "./build/lain-bootleg-bootleg.data",
+    "./lain_mov.webm": "./build/lain_mov.webm"
+  }
+}
