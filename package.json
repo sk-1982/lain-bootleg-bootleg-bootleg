@@ -12,5 +12,6 @@
     "./lain-bootleg-bootleg.wasm": "./build/lain-bootleg-bootleg.wasm",
     "./lain-bootleg-bootleg.data": "./build/lain-bootleg-bootleg.data",
     "./lain_mov.webm": "./build/lain_mov.webm"
-  }
+  },
+  "types": "./index.d.ts"
 }
