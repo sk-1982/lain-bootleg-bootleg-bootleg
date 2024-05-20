@@ -7,16 +7,16 @@ declare module 'lain-bootleg-bootleg-bootleg' {
         minigameWindow?: string
     }
 
-    export interface LainWindowCloseEvent<T extends boolean> extends CustomEvent<{ isMain: T }> {}
-    export interface LainWindowOpenEvent<T extends boolean> extends CustomEvent<{ isMain: T, title: string }> {}
+    export interface LainWindowCloseEvent<T extends boolean = boolean> extends CustomEvent<{ isMain: T }> {}
+    export interface LainWindowOpenEvent<T extends boolean = boolean> extends CustomEvent<{ isMain: T, title: string }> {}
 
     type EventTypes = {
         mainWindowClose: LainWindowCloseEvent<true>,
         minigameWindowClose: LainWindowCloseEvent<false>,
-        windowClose: LainWindowCloseEvent<boolean>,
+        windowClose: LainWindowCloseEvent,
         mainWindowOpen: LainWindowOpenEvent<true>,
         minigameWindowOpen: LainWindowOpenEvent<false>,
-        windowOpen: LainWindowOpenEvent<boolean>
+        windowOpen: LainWindowOpenEvent
     };
 
     type EventListener<T> = ((event: T) => void) | { handleEvent: (event: T) => void } | null;

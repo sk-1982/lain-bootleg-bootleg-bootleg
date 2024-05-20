@@ -8,7 +8,10 @@
   "author": "sk-1982",
   "type": "module",
   "exports": {
-    ".": "./build/lain-bootleg-bootleg.mjs",
+    ".": {
+      "import": "./build/lain-bootleg-bootleg.mjs",
+      "types": "./index.d.ts"
+    },
     "./lain-bootleg-bootleg.wasm": "./build/lain-bootleg-bootleg.wasm",
     "./lain-bootleg-bootleg.data": "./build/lain-bootleg-bootleg.data",
     "./lain_mov.webm": "./build/lain_mov.webm"
